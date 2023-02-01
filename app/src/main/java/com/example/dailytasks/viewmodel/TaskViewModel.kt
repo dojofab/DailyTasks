@@ -1,8 +1,13 @@
 package com.example.dailytasks.viewmodel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.dailytasks.data.TaskEntity
 import com.example.dailytasks.repository.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -10,6 +15,16 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class TaskViewModel @Inject constructor(
-    private val taskRepository: TaskRepository
+    taskRepository: TaskRepository
 ): ViewModel() {
+
+    private val _selectedTaskState: MutableState<TaskEntity?> = mutableStateOf(null)
+    val selectedTaskState: State<TaskEntity?>
+        get() = _selectedTaskState
+
+    val tasksListFlow: Flow<List<TaskEntity>> = taskRepository.getTasks()
+
+    fun selectTask(taskEntity: TaskEntity){
+        _selectedTaskState.value = taskEntity
+    }
 }
