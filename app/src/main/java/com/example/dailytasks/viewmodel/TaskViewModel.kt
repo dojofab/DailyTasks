@@ -23,6 +23,7 @@ import javax.inject.Inject
 interface TaskViewModelAbstract {
     val selectedTaskState: State<TaskEntity?>
     val duration: State<Duration?>
+    val timer: State<Long>
     val tasksListFlow: Flow<List<TaskEntity>>
     fun addOrUpdateTask(task: TaskEntity)
     fun deleteTask(task: TaskEntity)
@@ -30,6 +31,7 @@ interface TaskViewModelAbstract {
     fun resetTask()
     fun checkDuration(duration: Duration)
     fun resetDurationValidation()
+    fun setTimer(value: Int, unit: String)
 }
 
 @HiltViewModel
@@ -47,6 +49,9 @@ class TaskViewModel @Inject constructor(
 
     private val _duration: MutableState<Duration?> = mutableStateOf(null)
     override val duration: State<Duration?> = _duration
+
+    private val _timer: MutableState<Long> = mutableStateOf(0L)
+    override val timer: State<Long> = _timer
 
     override val tasksListFlow: Flow<List<TaskEntity>> = taskRepository.getTasks()
 
@@ -85,5 +90,16 @@ class TaskViewModel @Inject constructor(
 
     override fun resetTask() {
         _selectedTaskState.value = null
+    }
+
+    override fun setTimer(value: Int, unit: String) {
+        var multiplier = 0
+        when(unit){
+            "hours" -> multiplier = 3600
+            "minutes" -> multiplier = 60
+            "seconds" -> multiplier = 1
+        }
+
+        _timer.value = (value * multiplier).toLong()
     }
 }

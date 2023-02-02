@@ -27,4 +27,11 @@
     <string name="no_available_task">"No tasks available.\nClick '+' icon to add a task"</string>
 
     <string name="save_task">Task is saved</string>
+
+    <string name="minutes_elapsed">Minutes Elapsed</string>
+    <string name="minutes_remaining">Minutes Remaining</string>
+    <string name="minutes">Minutes</string>
+    <string name="seconds">Seconds</string>
+    <string name="hours">Hours</string>
+    <string name="timer_divider">:</string>
 </resources>

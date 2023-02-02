@@ -38,19 +38,20 @@ fun AppNavHost(taskViewModel: TaskViewModel){
             composable(Screen.LIST.name){
                 ListScreen(
                     taskViewModel = taskViewModel,
-                    onConfigure = {
-                    navController.navigate(Screen.CONFIGURE.name)
-                })
+                    onConfigure = { navController.navigate(Screen.DETAILS.name) }
+                )
             }
             composable(Screen.DETAILS.name){
-                DetailsScreen()
+                DetailsScreen(
+                    taskViewModel = taskViewModel,
+                    onEdit = { navController.navigate(Screen.CONFIGURE.name) },
+                    onBack = { navController.popBackStack() }
+                )
             }
             composable(Screen.CONFIGURE.name){
                 ConfigureScreen(
                     taskViewModel = taskViewModel,
-                    onConfigureDone = {
-                        navController.popBackStack()
-                    }
+                    onConfigureDone = { navController.popBackStack() }
                 )
             }
         }

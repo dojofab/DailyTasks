@@ -83,4 +83,7 @@ dependencies {
     // Color Picker Compose
     implementation "com.github.skydoves:colorpicker-compose:$color_picker_version"
 
+    // Page pager
+    implementation "com.google.accompanist:accompanist-pager:0.22.0-rc"
+
 }

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dailytasks.data.TaskEntity
 import com.example.dailytasks.R
-import com.example.dailytasks.util.displayLength
+import com.example.dailytasks.util.displayDuration
 import com.example.dailytasks.util.formatColor
 
 /**
@@ -46,7 +46,7 @@ fun TaskListItem(
             fontSize = 20.sp
         )
         Text(
-            text = task.length.displayLength(task.unit),
+            text = task.length.displayDuration(task.unit),
         )
         Icon(
             modifier = Modifier

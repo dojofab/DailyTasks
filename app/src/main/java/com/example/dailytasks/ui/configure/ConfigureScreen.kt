@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.dailytasks.R
 import com.example.dailytasks.data.TaskEntity
-import com.example.dailytasks.util.displayLength
+import com.example.dailytasks.util.displayDuration
 import com.example.dailytasks.util.showToast
 import com.example.dailytasks.viewmodel.TaskViewModel
 
@@ -90,7 +90,7 @@ fun ConfigureScreen(
                 onClick = {
                     durationPicker.value = true
                 }) {
-                Text(text = length.value.displayLength(unit.value))
+                Text(text = length.value.displayDuration(unit.value))
             }
             ConfigureItem(
                 leadingIcon = R.drawable.ic_theme,
