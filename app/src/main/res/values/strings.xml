@@ -8,8 +8,21 @@
     <string name="length">Length</string>
     <string name="theme">Theme</string>
 
+    <string name="select">Select</string>
+
+    <string name="duration">Duration</string>
+    <string name="duration_spiel">Set duration to complete the task</string>
+    <string name="unit">Unit</string>
+    <string name="value">Value</string>
+
     <string name="add_button">For adding new task</string>
     <string name="clock_icon">For showing duration</string>
     <string name="arrow_forward">For showing clickable item</string>
     <string name="delete_icon">For deleting task</string>
+    <string name="drop_down">For drop down menu</string>
+
+    <string name="zero">0</string>
+
+    <string name="invalid_duration">Please enter valid value for duration</string>
+    <string name="no_available_task">"No tasks available.\nClick '+' icon to add a task"</string>
 </resources>

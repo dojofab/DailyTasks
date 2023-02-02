@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -24,7 +25,8 @@ fun ConfigureItem(
     modifier: Modifier = Modifier,
     @DrawableRes leadingIcon: Int,
     @StringRes label: Int,
-    content: @Composable () -> Unit
+    onClick: () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -37,6 +39,9 @@ fun ConfigureItem(
                 shape = RoundedCornerShape(3.dp)
             )
             .height(60.dp)
+            .clickable {
+                onClick()
+            }
 
     ) {
         Image(

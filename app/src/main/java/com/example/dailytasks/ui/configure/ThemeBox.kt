@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-
+import androidx.core.graphics.toColorInt
 
 /**
  * Created by Donn Fabian on 02-01-2023
@@ -16,14 +16,21 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Theme(
     modifier: Modifier = Modifier,
-    color: Int
+    color: String
 ){
-    Box(
-        modifier = modifier
-            .size(30.dp)
-            .background(Color.Yellow)
-            .padding(10.dp)
-    ){
+    if(color.isNotEmpty()){
 
+        var formatColor = color
+        if(!formatColor.contains("#"))
+            formatColor = "#$formatColor"
+
+        Box(
+            modifier = modifier
+                .size(30.dp)
+                .background(Color(formatColor.toColorInt()))
+                .padding(10.dp)
+        ){
+
+        }
     }
 }

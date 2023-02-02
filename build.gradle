@@ -4,6 +4,7 @@ buildscript {
         nav_version = "2.5.3"
         room_version = '2.5.0'
         hilt_version = '2.44.2'
+        color_picker_version = '1.0.0'
     }
     dependencies {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
