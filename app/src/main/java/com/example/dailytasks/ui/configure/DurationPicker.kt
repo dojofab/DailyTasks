@@ -109,7 +109,7 @@ fun DurationPicker(
                 value = textFieldState.value,
                 onValueChange = {
                         text -> textFieldState.value = text
-                                duration.value.value = text.text},
+                                duration.value.value = text.text.toInt()},
                 placeholder = { Text(text = stringResource(id = R.string.zero)) },
                 modifier = Modifier
                     .onFocusChanged { focusState ->

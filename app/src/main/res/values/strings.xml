@@ -25,4 +25,6 @@
 
     <string name="invalid_duration">Please enter valid value for duration</string>
     <string name="no_available_task">"No tasks available.\nClick '+' icon to add a task"</string>
+
+    <string name="save_task">Task is saved</string>
 </resources>

@@ -88,17 +88,24 @@ fun Content(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+
+        var spiel = ""
+        if(taskListState.value.isEmpty())
+            spiel = stringResource(id = R.string.no_available_task)
+
         Text(
-            text = stringResource(id = R.string.no_available_task),
+            text = spiel,
             color = Color.LightGray,
             textAlign = TextAlign.Center
         )
         LazyColumn(
             modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(horizontal = 10.dp)
         ){
             items(
                 items = taskListState.value,
-                key = { it.id }
+                key = { it.id?: 0 }
             ){
                 TaskListItem(
                     task = it,

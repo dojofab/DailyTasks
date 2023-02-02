@@ -48,11 +48,8 @@ fun AppNavHost(taskViewModel: TaskViewModel){
             composable(Screen.CONFIGURE.name){
                 ConfigureScreen(
                     taskViewModel = taskViewModel,
-                    onCancel = {
-
-                    },
-                    onDelete = {
-
+                    onConfigureDone = {
+                        navController.popBackStack()
                     }
                 )
             }

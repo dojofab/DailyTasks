@@ -11,9 +11,10 @@ import com.example.dailytasks.util.Constant
 data class TaskEntity(
 
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long? = null,
 
     val name: String,
-    val length: Long,
-    val theme: Int
+    val length: Int,
+    val unit: String,
+    val theme: String
 )

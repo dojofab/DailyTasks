@@ -11,14 +11,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.dailytasks.R
+import com.example.dailytasks.data.TaskEntity
+import com.example.dailytasks.util.displayLength
 import com.example.dailytasks.util.showToast
 import com.example.dailytasks.viewmodel.TaskViewModel
 
@@ -29,13 +28,21 @@ import com.example.dailytasks.viewmodel.TaskViewModel
 fun ConfigureScreen(
     modifier: Modifier = Modifier,
     taskViewModel: TaskViewModel,
-    onCancel: () -> Unit,
-    onDelete: () -> Unit,
+    onConfigureDone: () -> Unit,
 ){
+
+    val task = taskViewModel.selectedTaskState.value
+
+    val taskName = remember { mutableStateOf(task?.name?: "") }
+    val length =  remember { mutableStateOf(task?.length?: 0) }
+    val unit =  remember { mutableStateOf(task?.unit?: "") }
+    val colorSelected = remember{ mutableStateOf(task?.theme?: "") }
+
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
+                modifier = modifier,
                 title = { Text(text = "",
                 ) },
                 backgroundColor = Color.Transparent,
@@ -43,7 +50,8 @@ fun ConfigureScreen(
                 actions = {
                     taskViewModel.selectedTaskState.value?.let {
                         IconButton(onClick = {
-                            onDelete()
+                            taskViewModel.deleteTask(task!!)
+                            onConfigureDone()
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
@@ -57,15 +65,13 @@ fun ConfigureScreen(
             )
         }
     ) { contentPadding ->
+
         Column(
-            modifier = Modifier.padding(contentPadding)
+            modifier = modifier.padding(contentPadding)
         ) {
 
-            val taskName = remember { mutableStateOf(TextFieldValue("")) }
             val colorPicker = remember { mutableStateOf(false) }
-            val colorSelected = remember{ mutableStateOf("") }
             val durationPicker = remember { mutableStateOf(false) }
-            val duration = remember{ mutableStateOf("") }
 
             OutlinedTextField(
                 maxLines = 1,
@@ -73,25 +79,18 @@ fun ConfigureScreen(
                 onValueChange = { text -> taskName.value = text },
                 placeholder = { Text(text = stringResource(id = R.string.task_name)) },
                 modifier = Modifier
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused) {
-                            val text = taskName.value.text
-                            taskName.value = taskName.value.copy(
-                                selection = TextRange(0, text.length)
-                            )
-                        }
-                    }
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .height(60.dp)
             )
+
             ConfigureItem(
                 leadingIcon = R.drawable.ic_clock,
                 label = R.string.length,
                 onClick = {
                     durationPicker.value = true
                 }) {
-                Text(text = duration.value)
+                Text(text = length.value.displayLength(unit.value))
             }
             ConfigureItem(
                 leadingIcon = R.drawable.ic_theme,
@@ -119,12 +118,35 @@ fun ConfigureScreen(
                     Text(
                         text = stringResource(id = R.string.cancel),
                         modifier = Modifier
-                            .clickable { onCancel() }
-
+                            .clickable {
+                                taskViewModel.resetTask()
+                                onConfigureDone()
+                            }
                     )
                 }
                 Button(
-                    onClick = { onDelete() },
+                    enabled = taskName.value.isNotEmpty() && colorSelected.value.isNotEmpty() && length.value > 0,
+                    onClick = {
+                        //add or update
+                        task?.let {
+                            taskViewModel.addOrUpdateTask(it.copy(
+                                name = taskName.value,
+                                theme = colorSelected.value,
+                                length = length.value,
+                                unit = unit.value
+
+                            ))
+                        }?: run{
+                            taskViewModel.addOrUpdateTask(TaskEntity(
+                                name = taskName.value,
+                                theme = colorSelected.value,
+                                length = length.value,
+                                unit = unit.value
+
+                            ))
+                        }
+                        onConfigureDone()
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
@@ -153,7 +175,12 @@ fun ConfigureScreen(
             }
 
             when(taskViewModel.isDurationValid.collectAsState().value){
-                true -> {}
+                true ->{
+                    taskViewModel.duration.value?.let {
+                        unit.value = it.unit
+                        length.value = it.value
+                    }
+                }
                 false -> LocalContext.current.showToast(stringResource(id = R.string.invalid_duration))
             }
         }

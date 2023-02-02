@@ -5,5 +5,5 @@ package com.example.dailytasks.data
  */
 data class Duration(
     var unit: String = "",
-    var value: String = ""
+    var value: Int = 0
 )
