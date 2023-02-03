@@ -53,6 +53,7 @@ fun DurationPicker(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(horizontal = 20.dp)
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

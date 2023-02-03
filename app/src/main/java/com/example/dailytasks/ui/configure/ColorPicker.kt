@@ -45,7 +45,9 @@ fun ColorPicker(
 
     Column(
         modifier = modifier
+            .fillMaxWidth()
             .background(Color.White)
+            .padding(horizontal = 20.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

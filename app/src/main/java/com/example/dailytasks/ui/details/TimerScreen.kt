@@ -53,6 +53,8 @@ fun StatefulTimerScreen(
                 //reset value to the default time set
                 millisInFuture.value = timer
                 timeData.value = timer
+
+                timeStatus.value = TaskScreenEnum.STOP
             }
         }
 
