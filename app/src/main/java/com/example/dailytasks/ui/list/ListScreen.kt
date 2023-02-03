@@ -35,7 +35,9 @@ fun ListScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopBar {
+            TopBar(
+                taskViewModel = taskViewModel
+            ) {
                 onConfigure()
             }
         }
@@ -52,6 +54,7 @@ fun ListScreen(
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
+    taskViewModel: TaskViewModel,
     onConfigure: () -> Unit,
 ){
     TopAppBar(
@@ -63,6 +66,7 @@ fun TopBar(
         elevation = 0.dp,
         actions = {
             IconButton(onClick = {
+                taskViewModel.resetTask()
                 onConfigure()
             }) {
                 Icon(

@@ -1,6 +1,7 @@
 package com.example.dailytasks.ui.details
 
 import android.os.CountDownTimer
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dailytasks.R
 import com.example.dailytasks.data.TaskEntity
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by Donn Fabian on 02-03-2023
@@ -20,7 +22,9 @@ import com.example.dailytasks.data.TaskEntity
 fun StatefulTimerScreen(
     modifier: Modifier = Modifier,
     taskEntity: TaskEntity,
-    timeStatus: MutableState<TaskScreenEnum>
+    timeStatus: MutableState<TaskScreenEnum>,
+    timeRemaining: MutableState<Long>,
+    elapsedTime: MutableState<Long>,
 ){
 
     val timer = (taskEntity.length * 60000).toLong()
@@ -64,7 +68,10 @@ fun StatefulTimerScreen(
     StatelessTimerScreen(
         modifier = modifier,
         taskEntity = taskEntity,
-        timeData =timeData
+        originalTime = timer,
+        timeData =timeData,
+        timeRemaining = timeRemaining,
+        elapsedTime = elapsedTime
     )
 }
 
@@ -72,7 +79,10 @@ fun StatefulTimerScreen(
 fun StatelessTimerScreen(
     modifier: Modifier = Modifier,
     taskEntity: TaskEntity,
+    originalTime: Long,
     timeData: MutableState<Long>,
+    timeRemaining: MutableState<Long>,
+    elapsedTime: MutableState<Long>,
 ){
     Column(
         modifier = modifier
@@ -84,65 +94,66 @@ fun StatelessTimerScreen(
             text = taskEntity.name,
             fontSize = 30.sp
         )
-        Timer(timeData = timeData)
+        Timer(
+            timeData = timeData,
+            originalTime = originalTime,
+            elapsedTime = elapsedTime,
+            timeRemaining = timeRemaining
+        )
     }
 }
 
 @Composable()
 fun Timer(
     modifier: Modifier = Modifier,
-    timeData: MutableState<Long>
+    originalTime: Long,
+    timeData: MutableState<Long>,
+    timeRemaining: MutableState<Long>,
+    elapsedTime: MutableState<Long>,
 ){
-    val seconds = (timeData.value / 1000) % 60
-    val minutes = (timeData.value / (1000 * 60) % 60)
-    val hours = (timeData.value / (1000 * 60 * 60) % 24)
+
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(timeData.value)
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(timeData.value) -
+            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeData.value))
+
+    timeRemaining.value = minutes
+    elapsedTime.value = TimeUnit.MILLISECONDS.toMinutes(originalTime - timeData.value)
 
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
     ){
-        if(hours > 0) {
-            Column(
-                modifier = Modifier,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "%02d".format(hours),
-                    fontSize = 70.sp
-                )
-                Text(
-                    text = stringResource(id = R.string.hours),
-                )
-            }
-            TimerDividerScreen(modifier = Modifier.padding(horizontal = 10.dp))
-        }
 
-        if(minutes > 0 || hours > 0) {
-            Column(
-                modifier = Modifier,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "%02d".format(minutes),
-                    fontSize = 70.sp
-                )
-                Text(
-                    text = stringResource(id = R.string.minutes),
-                )
-            }
-            TimerDividerScreen(modifier = Modifier.padding(horizontal = 10.dp))
-        }
-        Column(
+        Time(
             modifier = Modifier,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "%02d".format(seconds),
-                fontSize = 70.sp
-            )
-            Text(
-                text = stringResource(id = R.string.seconds),
-            )
-        }
+            value = minutes,
+            label = R.string.minutes
+        )
+        TimerDividerScreen(modifier = Modifier.padding(horizontal = 10.dp))
+        Time(
+            modifier = Modifier,
+            value = seconds,
+            label = R.string.seconds
+        )
+    }
+}
+
+@Composable
+fun Time(
+    modifier: Modifier = Modifier,
+    @StringRes label: Int,
+    value: Long,
+){
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "%02d".format(value),
+            fontSize = 70.sp
+        )
+        Text(
+            text = stringResource(id = label),
+        )
     }
 }

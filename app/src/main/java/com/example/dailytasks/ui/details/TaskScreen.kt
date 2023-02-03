@@ -16,7 +16,6 @@ import com.example.dailytasks.util.formatColor
 /**
  * Created by Donn Fabian on 02-02-2023
  */
-
 enum class TaskScreenEnum {
     PLAY,
     PAUSE,
@@ -37,10 +36,15 @@ fun StatefulTaskScreen(
 
     ) {
 
-        val timerStatus = rememberSaveable{ mutableStateOf(TaskScreenEnum.PAUSE) }
+        val timerStatus = rememberSaveable{ mutableStateOf(TaskScreenEnum.STOP) }
+        val elapsedTime = rememberSaveable{ mutableStateOf(0L) }
+        val timeRemaining = rememberSaveable{ mutableStateOf(0L) }
+
         StatelessTaskScreen(
             taskEntity = taskEntity,
-            timerStatus = timerStatus
+            timerStatus = timerStatus,
+            elapsedTime = elapsedTime,
+            timeRemaining = timeRemaining
         )
     }
 }
@@ -49,7 +53,9 @@ fun StatefulTaskScreen(
 fun StatelessTaskScreen(
     modifier: Modifier = Modifier,
     taskEntity: TaskEntity,
-    timerStatus: MutableState<TaskScreenEnum>
+    timerStatus: MutableState<TaskScreenEnum>,
+    timeRemaining: MutableState<Long>,
+    elapsedTime: MutableState<Long>,
 ){
     Column(
         modifier = modifier
@@ -60,12 +66,16 @@ fun StatelessTaskScreen(
 
     ){
         CounterScreen(
-            modifier = Modifier
+            modifier = Modifier,
+            timeRemaining = timeRemaining,
+            elapsedTime = elapsedTime
         )
         StatefulTimerScreen(
             modifier = Modifier.weight(1f),
             taskEntity = taskEntity,
-            timeStatus = timerStatus
+            timeStatus = timerStatus,
+            timeRemaining = timeRemaining,
+            elapsedTime = elapsedTime
         )
         ControlsScreen(
             onPlay = { timerStatus.value = TaskScreenEnum.PLAY },

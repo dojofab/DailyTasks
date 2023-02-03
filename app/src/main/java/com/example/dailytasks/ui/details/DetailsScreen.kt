@@ -3,10 +3,7 @@ package com.example.dailytasks.ui.details
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +29,8 @@ fun DetailsScreen(
     onEdit: () -> Unit,
     onBack: () -> Unit
 ){
+    //val timerStatus = rememberSaveable{ mutableStateOf(TaskScreenEnum.STOP) }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -119,6 +118,14 @@ fun Content(
             StatefulTaskScreen(
                 taskEntity = taskListState.value[page],
             )
+
+            LaunchedEffect(key1 = pagerState.pageCount) {
+                coroutineScope.launch {
+                    if (pagerState.pageCount > 0)
+                        pagerState.animateScrollToPage(selectedItemIndex)
+
+                }
+            }
         }
         PagerIndicator(
             modifier = Modifier
@@ -129,12 +136,5 @@ fun Content(
             selectedColor = Color.DarkGray,
             unSelectedColor = Color.LightGray
         )
-
-        LaunchedEffect(key1 = pagerState.pageCount) {
-            coroutineScope.launch {
-                if (pagerState.pageCount != 0)
-                    pagerState.animateScrollToPage(selectedItemIndex)
-            }
-        }
     }
 }
