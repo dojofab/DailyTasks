@@ -15,6 +15,5 @@ data class TaskEntity(
 
     val name: String,
     val length: Int,
-    val unit: String,
     val theme: String
 )

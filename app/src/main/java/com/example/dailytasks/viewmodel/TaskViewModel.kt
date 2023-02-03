@@ -4,9 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.dailytasks.data.Duration
 import com.example.dailytasks.data.TaskEntity
 import com.example.dailytasks.repository.TaskRepository
+import com.example.dailytasks.util.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,16 +22,15 @@ import javax.inject.Inject
 
 interface TaskViewModelAbstract {
     val selectedTaskState: State<TaskEntity?>
-    val duration: State<Duration?>
+    val duration: State<Int?>
     val timer: State<Long?>
     val tasksListFlow: Flow<List<TaskEntity>>
     fun addOrUpdateTask(task: TaskEntity)
     fun deleteTask(task: TaskEntity)
     fun selectTask(task: TaskEntity)
     fun resetTask()
-    fun checkDuration(duration: Duration)
+    fun checkDuration(length: Int)
     fun resetDurationValidation()
-    fun setTimer(value: Int, unit: String): Long
 }
 
 @HiltViewModel
@@ -47,8 +46,8 @@ class TaskViewModel @Inject constructor(
     private val _isDurationValid = MutableStateFlow(true)
     val isDurationValid: StateFlow<Boolean> = _isDurationValid
 
-    private val _duration: MutableState<Duration?> = mutableStateOf(null)
-    override val duration: State<Duration?> = _duration
+    private val _duration: MutableState<Int?> = mutableStateOf(null)
+    override val duration: State<Int?> = _duration
 
     private val _timer: MutableState<Long?> = mutableStateOf(0L)
     override val timer: State<Long?> = _timer
@@ -59,12 +58,12 @@ class TaskViewModel @Inject constructor(
         _selectedTaskState.value = task
     }
 
-    override fun checkDuration(duration: Duration){
+    override fun checkDuration(length: Int){
 
-        _duration.value = duration
+        _duration.value = length
 
         //check if duration is valid
-        val isDurationValid = duration.value > 0
+        val isDurationValid = length > 0 && length < Constant.MAX_MINUTE
         _isDurationValid.value = isDurationValid
     }
 
@@ -90,16 +89,5 @@ class TaskViewModel @Inject constructor(
 
     override fun resetTask() {
         _selectedTaskState.value = null
-    }
-
-    override fun setTimer(value: Int, unit: String): Long {
-        var multiplier = 0
-        when(unit){
-            "hours" -> multiplier = 3600
-            "minutes" -> multiplier = 60
-            "seconds" -> multiplier = 1
-        }
-
-        return (value * multiplier).toLong()
     }
 }

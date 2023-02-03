@@ -28,6 +28,7 @@ import com.example.dailytasks.viewmodel.TaskViewModel
 fun ListScreen(
     modifier: Modifier = Modifier,
     taskViewModel: TaskViewModel,
+    onTaskClick: () -> Unit,
     onConfigure: () -> Unit,
 ){
 
@@ -43,7 +44,7 @@ fun ListScreen(
         Content(
             modifier = Modifier.padding(contentPadding),
             taskViewModel = taskViewModel) {
-            onConfigure()
+            onTaskClick()
         }
     }
 }
@@ -78,7 +79,8 @@ fun TopBar(
 fun Content(
     modifier: Modifier = Modifier,
     taskViewModel: TaskViewModel,
-    onConfigure: () -> Unit,
+    onTaskClick: () -> Unit
+
 ){
 
     val taskListState = taskViewModel.tasksListFlow.collectAsState(initial = listOf())
@@ -111,7 +113,7 @@ fun Content(
                     task = it,
                     onClick = {
                         taskViewModel.selectTask(it)
-                        onConfigure()
+                        onTaskClick()
                     }
                 )
             }

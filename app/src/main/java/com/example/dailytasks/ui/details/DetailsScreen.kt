@@ -118,7 +118,6 @@ fun Content(
         ) { page ->
             StatefulTaskScreen(
                 taskEntity = taskListState.value[page],
-                taskViewModel = taskViewModel
             )
         }
         PagerIndicator(

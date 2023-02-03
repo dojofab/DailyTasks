@@ -37,7 +37,8 @@ fun AppNavHost(taskViewModel: TaskViewModel){
             composable(Screen.LIST.name){
                 ListScreen(
                     taskViewModel = taskViewModel,
-                    onConfigure = { navController.navigate(Screen.DETAILS.name) }
+                    onConfigure = { navController.navigate(Screen.CONFIGURE.name) },
+                    onTaskClick = { navController.navigate(Screen.DETAILS.name) }
                 )
             }
             composable(Screen.DETAILS.name){

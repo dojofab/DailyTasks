@@ -46,7 +46,7 @@ fun TaskListItem(
             fontSize = 20.sp
         )
         Text(
-            text = task.length.displayDuration(task.unit),
+            text = task.length.displayDuration(),
         )
         Icon(
             modifier = Modifier

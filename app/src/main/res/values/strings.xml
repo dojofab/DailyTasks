@@ -14,6 +14,7 @@
     <string name="duration_spiel">Set duration to complete the task</string>
     <string name="unit">Unit</string>
     <string name="value">Value</string>
+    <string name="value_in_minutes">Value(in minutes)</string>
 
     <string name="add_button">For adding new task</string>
     <string name="clock_icon">For showing duration</string>
@@ -23,7 +24,7 @@
 
     <string name="zero">0</string>
 
-    <string name="invalid_duration">Please enter valid value for duration</string>
+    <string name="invalid_duration">Please enter valid value for duration. Must be greater than 0 and less than 1440 (24 hrs)</string>
     <string name="no_available_task">"No tasks available.\nClick '+' icon to add a task"</string>
 
     <string name="save_task">Task is saved</string>

@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.dailytasks.R
@@ -23,7 +24,6 @@ fun DataScreen(
     modifier: Modifier,
     taskName: MutableState<String>,
     colorSelected: MutableState<String>,
-    unit: MutableState<String>,
     length: MutableState<Int>,
     durationPicker: MutableState<Boolean>,
     colorPicker: MutableState<Boolean>,
@@ -49,7 +49,10 @@ fun DataScreen(
             onClick = {
                 durationPicker.value = true
             }) {
-            Text(text = length.value.displayDuration(unit.value))
+            Text(
+                text = length.value.displayDuration(),
+                color = Color.Blue
+            )
         }
         ConfigureItem(
             leadingIcon = R.drawable.ic_theme,

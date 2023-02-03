@@ -24,7 +24,6 @@ fun ControlsScreen(
     taskEntity: TaskEntity?,
     taskName: MutableState<String>,
     colorSelected: MutableState<String>,
-    unit: MutableState<String>,
     length: MutableState<Int>,
     onConfigureDone: () -> Unit
 ) {
@@ -60,7 +59,6 @@ fun ControlsScreen(
                         name = taskName.value,
                         theme = colorSelected.value,
                         length = length.value,
-                        unit = unit.value
 
                     ))
                 }?: run{
@@ -69,9 +67,7 @@ fun ControlsScreen(
                         name = taskName.value,
                         theme = colorSelected.value,
                         length = length.value,
-                        unit = unit.value
-
-                    )
+                        )
                     )
                 }
                 onConfigureDone()

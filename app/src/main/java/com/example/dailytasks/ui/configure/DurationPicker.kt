@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.dailytasks.R
-import com.example.dailytasks.data.Duration
-import com.example.dailytasks.ui.custom.ExposedDropdownMenu
 import com.example.dailytasks.ui.custom.Section
 
 /**
@@ -31,7 +29,7 @@ fun DurationPickerDialog(
     modifier: Modifier = Modifier,
     openDialogCustom: MutableState<Boolean>,
     onClose: () -> Unit,
-    onDurationSet: (Duration) -> Unit){
+    onDurationSet: (Int) -> Unit){
 
     Dialog(
         onDismissRequest = { openDialogCustom.value = false},) {
@@ -50,7 +48,7 @@ fun DurationPickerDialog(
 fun DurationPicker(
     modifier: Modifier = Modifier,
     onClose: () -> Unit,
-    onDurationSet: (Duration) -> Unit
+    onDurationSet: (Int) -> Unit
 ){
     Column(
         modifier = modifier
@@ -59,14 +57,8 @@ fun DurationPicker(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val items = arrayListOf(
-            "hours",
-            "minutes",
-            "seconds"
-        )
-
         val textFieldState = remember { mutableStateOf(TextFieldValue("")) }
-        val duration = remember { mutableStateOf(Duration(unit= items[0])) }
+        val duration = remember { mutableStateOf(0) }
 
         Text(
             modifier = Modifier
@@ -86,20 +78,8 @@ fun DurationPicker(
             fontSize = 14.sp,
             color = Color.Gray
         )
-
         Section(
-            label = R.string.unit,
-            horizontalPadding = 20.dp,
-            verticalPadding = 10.dp
-        ) {
-            ExposedDropdownMenu(
-                items = items,
-                onItemSelected = {
-                    duration.value.unit = it
-                })
-        }
-        Section(
-            label = R.string.value,
+            label = R.string.value_in_minutes,
             horizontalPadding = 20.dp,
             verticalPadding = 10.dp
         ) {
@@ -109,7 +89,7 @@ fun DurationPicker(
                 value = textFieldState.value,
                 onValueChange = {
                         text -> textFieldState.value = text
-                                duration.value.value = text.text.toInt()},
+                                duration.value = text.text.toInt()},
                 placeholder = { Text(text = stringResource(id = R.string.zero)) },
                 modifier = Modifier
                     .onFocusChanged { focusState ->

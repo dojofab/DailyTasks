@@ -43,7 +43,6 @@ fun StatefulConfigureScreen(
 
     val taskName = remember { mutableStateOf(taskEntity?.name?: "") }
     val length =  remember { mutableStateOf(taskEntity?.length?: 0) }
-    val unit =  remember { mutableStateOf(taskEntity?.unit?: "") }
     val colorSelected = remember{ mutableStateOf(taskEntity?.theme?: "") }
 
     StatelessConfigureScreen(
@@ -52,7 +51,6 @@ fun StatefulConfigureScreen(
         taskEntity = taskEntity,
         taskName = taskName,
         colorSelected = colorSelected,
-        unit = unit,
         length = length
     ) {
         onConfigureDone()
@@ -66,7 +64,6 @@ fun StatelessConfigureScreen(
     taskEntity: TaskEntity?,
     taskName: MutableState<String>,
     colorSelected: MutableState<String>,
-    unit: MutableState<String>,
     length: MutableState<Int>,
     onConfigureDone: () -> Unit
 ){
@@ -88,7 +85,6 @@ fun StatelessConfigureScreen(
             taskEntity = taskEntity,
             taskName = taskName,
             colorSelected = colorSelected,
-            unit = unit,
             length = length
         ) {
             onConfigureDone()
@@ -134,7 +130,6 @@ fun StatefulContent(
     taskEntity: TaskEntity?,
     taskName: MutableState<String>,
     colorSelected: MutableState<String>,
-    unit: MutableState<String>,
     length: MutableState<Int>,
     onConfigureDone: () -> Unit
 ){
@@ -164,8 +159,7 @@ fun StatefulContent(
     when(taskViewModel.isDurationValid.collectAsState().value){
         true ->{
             taskViewModel.duration.value?.let {
-                unit.value = it.unit
-                length.value = it.value
+                length.value = it
             }
         }
         false -> LocalContext.current.showToast(stringResource(id = R.string.invalid_duration))
@@ -177,7 +171,6 @@ fun StatefulContent(
         taskEntity = taskEntity,
         taskName = taskName,
         colorSelected = colorSelected,
-        unit = unit,
         length = length,
         durationPicker = durationPicker,
         colorPicker = colorPicker
@@ -193,7 +186,6 @@ fun StatelessContent(
     taskEntity: TaskEntity?,
     taskName: MutableState<String>,
     colorSelected: MutableState<String>,
-    unit: MutableState<String>,
     length: MutableState<Int>,
     durationPicker: MutableState<Boolean>,
     colorPicker: MutableState<Boolean>,
@@ -206,7 +198,6 @@ fun StatelessContent(
             modifier = modifier,
             taskName = taskName,
             colorSelected = colorSelected,
-            unit = unit,
             length = length,
             durationPicker = durationPicker,
             colorPicker = colorPicker
@@ -218,7 +209,6 @@ fun StatelessContent(
             taskEntity = taskEntity,
             taskName = taskName,
             colorSelected = colorSelected,
-            unit = unit,
             length = length
         ) {
             onConfigureDone()

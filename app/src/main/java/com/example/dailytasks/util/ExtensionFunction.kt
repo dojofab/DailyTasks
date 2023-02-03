@@ -13,7 +13,8 @@ fun Context.showToast(message: String){
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
-fun Int.displayDuration(unit: String): String{
+fun Int.displayDuration(): String{
+    val unit = "minutes"
     return when (this) {
         0 -> ""
         1 -> "$this ${unit.dropLast(1)}"

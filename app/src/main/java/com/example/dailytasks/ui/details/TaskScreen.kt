@@ -12,7 +12,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.dailytasks.data.TaskEntity
 import com.example.dailytasks.util.formatColor
-import com.example.dailytasks.viewmodel.TaskViewModel
 
 /**
  * Created by Donn Fabian on 02-02-2023
@@ -28,7 +27,6 @@ enum class TaskScreenEnum {
 fun StatefulTaskScreen(
     modifier: Modifier = Modifier,
     taskEntity: TaskEntity,
-    taskViewModel: TaskViewModel
 ) {
     Column(
         modifier = modifier
@@ -42,7 +40,6 @@ fun StatefulTaskScreen(
         val timerStatus = rememberSaveable{ mutableStateOf(TaskScreenEnum.PAUSE) }
         StatelessTaskScreen(
             taskEntity = taskEntity,
-            taskViewModel = taskViewModel,
             timerStatus = timerStatus
         )
     }
@@ -52,7 +49,6 @@ fun StatefulTaskScreen(
 fun StatelessTaskScreen(
     modifier: Modifier = Modifier,
     taskEntity: TaskEntity,
-    taskViewModel: TaskViewModel,
     timerStatus: MutableState<TaskScreenEnum>
 ){
     Column(
@@ -69,7 +65,6 @@ fun StatelessTaskScreen(
         StatefulTimerScreen(
             modifier = Modifier.weight(1f),
             taskEntity = taskEntity,
-            taskViewModel = taskViewModel,
             timeStatus = timerStatus
         )
         ControlsScreen(
