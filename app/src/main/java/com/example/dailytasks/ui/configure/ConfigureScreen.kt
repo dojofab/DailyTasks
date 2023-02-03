@@ -18,6 +18,7 @@ import com.example.dailytasks.viewmodel.TaskViewModel
 /**
  * Created by Donn Fabian on 02-01-2023
  */
+
 @Composable
 fun ConfigureScreen(
     modifier: Modifier = Modifier,
@@ -57,6 +58,7 @@ fun StatefulConfigureScreen(
     }
 }
 
+
 @Composable
 fun StatelessConfigureScreen(
     modifier: Modifier,
@@ -73,7 +75,11 @@ fun StatelessConfigureScreen(
             TopBar(
                 modifier = Modifier,
                 taskViewModel = taskViewModel,
-                taskEntity = taskEntity){
+                taskEntity = taskEntity,
+                taskName = taskName,
+                colorSelected = colorSelected,
+                length = length
+            ){
                 onConfigureDone()
             }
         }
@@ -97,6 +103,9 @@ fun TopBar(
     modifier: Modifier = Modifier,
     taskViewModel: TaskViewModel,
     taskEntity: TaskEntity?,
+    taskName: MutableState<String>,
+    colorSelected: MutableState<String>,
+    length: MutableState<Int>,
     onConfigureDone: () -> Unit
 ){
     TopAppBar(
@@ -107,14 +116,22 @@ fun TopBar(
         elevation = 0.dp,
         actions = {
             taskViewModel.selectedTaskState.value?.let {
-                IconButton(onClick = {
+
+                val status = taskName.value.isNotEmpty() && colorSelected.value.isNotEmpty() && length.value > 0
+                val colorDisable: Color = if(status)
+                    Color.Red
+                else
+                    Color.LightGray
+                IconButton(
+                    enabled = status,
+                    onClick = {
                     taskViewModel.deleteTask(taskEntity!!)
                     onConfigureDone()
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription =  stringResource(id = R.string.delete_icon),
-                        tint = Color.Red,
+                        tint = colorDisable,
                         modifier = Modifier.size(30.dp)
                     )
                 }
@@ -148,21 +165,23 @@ fun StatefulContent(
         taskViewModel.resetDurationValidation()
         DurationPickerDialog(
             openDialogCustom = durationPicker,
+            length = taskEntity?.length,
             onClose = {
                 durationPicker.value = false
             }){
+
+            length.value = it
             taskViewModel.checkDuration(it)
             durationPicker.value = false
         }
     }
 
     when(taskViewModel.isDurationValid.collectAsState().value){
-        true ->{
-            taskViewModel.duration.value?.let {
-                length.value = it
-            }
+        true ->{}
+        false -> {
+            length.value = 0
+            LocalContext.current.showToast(stringResource(id = R.string.invalid_duration))
         }
-        false -> LocalContext.current.showToast(stringResource(id = R.string.invalid_duration))
     }
 
     StatelessContent(

@@ -8,8 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dailytasks.ui.theme.DailyTasksTheme
 import com.example.dailytasks.R
+import com.example.dailytasks.data.TaskEntity
 import com.example.dailytasks.viewmodel.TaskViewModel
 
 /**
@@ -43,9 +43,13 @@ fun ListScreen(
         }
     ) { contentPadding ->
 
+        val taskListState = taskViewModel.tasksListFlow.collectAsState(initial = null)
+
         Content(
             modifier = Modifier.padding(contentPadding),
-            taskViewModel = taskViewModel) {
+            tasks = taskListState.value,
+        ) {
+            taskViewModel.selectTask(it)
             onTaskClick()
         }
     }
@@ -82,12 +86,9 @@ fun TopBar(
 @Composable
 fun Content(
     modifier: Modifier = Modifier,
-    taskViewModel: TaskViewModel,
-    onTaskClick: () -> Unit
-
+    tasks: List<TaskEntity>?,
+    onTaskClick: (TaskEntity) -> Unit
 ){
-
-    val taskListState = taskViewModel.tasksListFlow.collectAsState(initial = listOf())
 
     Box(
         modifier = modifier
@@ -95,36 +96,35 @@ fun Content(
         contentAlignment = Alignment.Center
     ) {
 
-        var spiel = ""
-        if(taskListState.value.isEmpty())
-            spiel = stringResource(id = R.string.no_available_task)
-
-        Text(
-            text = spiel,
-            color = Color.LightGray,
-            textAlign = TextAlign.Center
-        )
-        LazyColumn(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(horizontal = 10.dp)
-        ){
-            items(
-                items = taskListState.value,
-                key = { it.id?: 0 }
+        tasks?.let { it ->
+            LazyColumn(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(horizontal = 10.dp)
             ){
-                TaskListItem(
-                    task = it,
-                    onClick = {
-                        taskViewModel.selectTask(it)
-                        onTaskClick()
-                    }
+                items(
+                    items = it,
+                    key = { it.id?: 0 }
+                ){
+                    TaskListItem(
+                        task = it,
+                        onClick = {
+                            onTaskClick(it)
+                        }
+                    )
+                }
+            }
+
+            if(it.isEmpty()){
+                Text(
+                    text = stringResource(id = R.string.no_available_task),
+                    color = Color.LightGray,
+                    textAlign = TextAlign.Center
                 )
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

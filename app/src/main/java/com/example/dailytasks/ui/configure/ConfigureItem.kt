@@ -3,11 +3,11 @@ package com.example.dailytasks.ui.configure
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,16 +44,18 @@ fun ConfigureItem(
             }
 
     ) {
-        Image(
+        Icon(
             modifier = Modifier
                 .size(40.dp)
                 .padding(10.dp),
             painter = painterResource(id = leadingIcon),
-            contentDescription = null
+            contentDescription = null,
+            tint = Color.Gray
         )
         Text(
             text = stringResource(id = label),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            color = Color.Gray
         )
         Box(
             modifier = Modifier

@@ -64,13 +64,14 @@ fun ControlsScreen(
                 }?: run{
                     taskViewModel.addOrUpdateTask(
                         TaskEntity(
-                        name = taskName.value,
-                        theme = colorSelected.value,
-                        length = length.value,
+                            name = taskName.value,
+                            theme = colorSelected.value,
+                            length = length.value,
                         )
                     )
                 }
                 onConfigureDone()
+
             },
             modifier = Modifier
                 .weight(1f)

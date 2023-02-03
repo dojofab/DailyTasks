@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -25,6 +24,7 @@ import com.example.dailytasks.ui.custom.Section
 @Composable
 fun DurationPickerDialog(
     modifier: Modifier = Modifier,
+    length: Int?,
     openDialogCustom: MutableState<Boolean>,
     onClose: () -> Unit,
     onDurationSet: (Int) -> Unit){
@@ -33,6 +33,7 @@ fun DurationPickerDialog(
         onDismissRequest = { openDialogCustom.value = false},) {
         DurationPicker(
             modifier = modifier,
+            length = length,
             onClose = {
                 onClose()
             },
@@ -45,6 +46,7 @@ fun DurationPickerDialog(
 @Composable
 fun DurationPicker(
     modifier: Modifier = Modifier,
+    length: Int?,
     onClose: () -> Unit,
     onDurationSet: (Int) -> Unit
 ) {
@@ -55,7 +57,12 @@ fun DurationPicker(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val textFieldState = remember { mutableStateOf(TextFieldValue("")) }
+        var defaultText = ""
+        length?.let {
+            defaultText = it.toString()
+        }
+
+        val textFieldState = remember { mutableStateOf(defaultText) }
         val duration = remember { mutableStateOf(0) }
 
         Text(
@@ -89,11 +96,14 @@ fun DurationPicker(
                     .height(60.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 maxLines = 1,
+                singleLine = true,
                 value = textFieldState.value,
                 onValueChange = { text ->
-                    textFieldState.value = text
-                    if(text.text.isNotEmpty())
-                        duration.value = text.text.toInt()
+                    if(text.isNotEmpty()) {
+                        val input = text.filter { it.isDigit() }
+                        textFieldState.value = input
+                        duration.value = input.toInt()
+                    }
                 },
                 placeholder = { Text(text = stringResource(id = R.string.zero)) },
             )

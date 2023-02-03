@@ -11,13 +11,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dailytasks.data.TaskEntity
 import com.example.dailytasks.R
-import com.example.dailytasks.util.displayDuration
 import com.example.dailytasks.util.formatColor
 
 /**
@@ -43,10 +44,13 @@ fun TaskListItem(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 20.dp),
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = task.length.displayDuration(),
+            text = task.length.toString(),
+            color = Color.DarkGray
         )
         Icon(
             modifier = Modifier
@@ -56,6 +60,7 @@ fun TaskListItem(
                 ),
             painter = painterResource(id = R.drawable.ic_clock),
             contentDescription = stringResource(id = R.string.clock_icon),
+            tint = Color.DarkGray
 
         )
         Icon(
@@ -66,6 +71,7 @@ fun TaskListItem(
                 ),
             painter = painterResource(id = R.drawable.ic_arrow_forward),
             contentDescription = stringResource(id = R.string.arrow_forward),
+            tint = Color.DarkGray
         )
     }
 }

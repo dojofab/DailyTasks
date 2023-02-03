@@ -19,10 +19,8 @@ import javax.inject.Inject
 /**
  * Created by Donn Fabian on 02-01-2023
  */
-
 interface TaskViewModelAbstract {
     val selectedTaskState: State<TaskEntity?>
-    val duration: State<Int?>
     val timer: State<Long?>
     val tasksListFlow: Flow<List<TaskEntity>>
     fun addOrUpdateTask(task: TaskEntity)
@@ -46,9 +44,6 @@ class TaskViewModel @Inject constructor(
     private val _isDurationValid = MutableStateFlow(true)
     val isDurationValid: StateFlow<Boolean> = _isDurationValid
 
-    private val _duration: MutableState<Int?> = mutableStateOf(null)
-    override val duration: State<Int?> = _duration
-
     private val _timer: MutableState<Long?> = mutableStateOf(0L)
     override val timer: State<Long?> = _timer
 
@@ -60,11 +55,10 @@ class TaskViewModel @Inject constructor(
 
     override fun checkDuration(length: Int){
 
-        _duration.value = length
-
         //check if duration is valid
         val isDurationValid = length > 0 && length < Constant.MAX_MINUTE
         _isDurationValid.value = isDurationValid
+
     }
 
     override fun resetDurationValidation(){

@@ -29,7 +29,6 @@ fun DetailsScreen(
     onEdit: () -> Unit,
     onBack: () -> Unit
 ){
-    //val timerStatus = rememberSaveable{ mutableStateOf(TaskScreenEnum.STOP) }
 
     Scaffold(
         modifier = modifier,
@@ -42,7 +41,7 @@ fun DetailsScreen(
     ) { contentPadding ->
         Content(
             modifier = Modifier.padding(contentPadding),
-            taskViewModel = taskViewModel
+            taskViewModel = taskViewModel,
         )
     }
 }
@@ -108,6 +107,21 @@ fun Content(
         val coroutineScope = rememberCoroutineScope()
 
         val pagerState = rememberPagerState()
+        LaunchedEffect(
+            key1 = pagerState.pageCount,
+            key2 = pagerState
+        ) {
+            coroutineScope.launch {
+                if (selectedItemIndex >= 0)
+                    pagerState.animateScrollToPage(selectedItemIndex)
+            }
+
+            snapshotFlow { pagerState.currentPage }.collect { page ->
+                if(taskListState.value.isNotEmpty())
+                    taskViewModel.selectTask(taskListState.value[page])
+            }
+        }
+
         HorizontalPager(
             modifier = Modifier
                 .fillMaxSize()
@@ -118,14 +132,6 @@ fun Content(
             StatefulTaskScreen(
                 taskEntity = taskListState.value[page],
             )
-
-            LaunchedEffect(key1 = pagerState.pageCount) {
-                coroutineScope.launch {
-                    if (pagerState.pageCount > 0)
-                        pagerState.animateScrollToPage(selectedItemIndex)
-
-                }
-            }
         }
         PagerIndicator(
             modifier = Modifier
