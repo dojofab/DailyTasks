@@ -16,7 +16,6 @@ import com.example.dailytasks.viewmodel.TaskViewModel
 /**
  * Created by Donn Fabian on 02-01-2023
  */
-
 private enum class Screen{
     LIST,
     DETAILS,

@@ -4,7 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +20,7 @@ import com.example.dailytasks.viewmodel.TaskViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 /**
  * Created by Donn Fabian on 02-01-2023
@@ -64,7 +67,8 @@ fun TopBar(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .clickable {
-                    onEdit() },
+                        onEdit()
+                    },
                 text = stringResource(id = R.string.edit),
                 color = Color.Blue,
                 fontSize = 20.sp
@@ -98,16 +102,21 @@ fun Content(
     ) {
 
         val taskListState = taskViewModel.tasksListFlow.collectAsState(initial = listOf())
+        val taskEntity = taskViewModel.selectedTaskState.value
 
-        val state = rememberPagerState()
+        val selectedItemIndex = taskListState.value.indexOf(taskEntity)
+
+        val coroutineScope = rememberCoroutineScope()
+
+        val pagerState = rememberPagerState()
         HorizontalPager(
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f),
             count = taskListState.value.size,
-            state = state
+            state = pagerState
         ) { page ->
-            Task(
+            StatefulTaskScreen(
                 taskEntity = taskListState.value[page],
                 taskViewModel = taskViewModel
             )
@@ -117,9 +126,16 @@ fun Content(
                 .fillMaxWidth()
                 .padding(vertical = 10.dp),
             totalDots = taskListState.value.size,
-            selectedIndex = state.currentPage,
+            selectedIndex = pagerState.currentPage,
             selectedColor = Color.DarkGray,
             unSelectedColor = Color.LightGray
         )
+
+        LaunchedEffect(key1 = pagerState.pageCount) {
+            coroutineScope.launch {
+                if (pagerState.pageCount != 0)
+                    pagerState.animateScrollToPage(selectedItemIndex)
+            }
+        }
     }
 }
