@@ -22,6 +22,7 @@ import com.example.dailytasks.util.displayDuration
 @Composable
 fun DataScreen(
     modifier: Modifier,
+    isRunning: Boolean? = false,
     taskName: MutableState<String>,
     colorSelected: MutableState<String>,
     length: MutableState<Int>,
@@ -43,15 +44,26 @@ fun DataScreen(
             singleLine = true,
         )
 
+        var enable = true
+        isRunning?.let {
+            enable = !it
+        }
+
+        val color: Color = if(enable)
+            Color.Blue
+        else
+            Color.LightGray
+
         ConfigureItem(
             leadingIcon = R.drawable.ic_clock,
             label = R.string.length,
             onClick = {
-                durationPicker.value = true
+                if(enable)
+                    durationPicker.value = true
             }) {
             Text(
                 text = length.value.displayDuration(),
-                color = Color.Blue
+                color = color
             )
         }
         ConfigureItem(

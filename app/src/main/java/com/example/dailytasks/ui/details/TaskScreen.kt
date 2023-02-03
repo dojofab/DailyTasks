@@ -78,9 +78,18 @@ fun StatelessTaskScreen(
             elapsedTime = elapsedTime
         )
         ControlsScreen(
-            onPlay = { timerStatus.value = TaskScreenEnum.PLAY },
-            onPause = {timerStatus.value = TaskScreenEnum.PAUSE },
-            onStop = {timerStatus.value = TaskScreenEnum.STOP }
+            onPlay = {
+                taskEntity.isRunning = true
+                timerStatus.value = TaskScreenEnum.PLAY
+                     },
+            onPause = {
+                taskEntity.isRunning = true
+                timerStatus.value = TaskScreenEnum.PAUSE
+                      },
+            onStop = {
+                taskEntity.isRunning = false
+                timerStatus.value = TaskScreenEnum.STOP
+            }
         )
     }
 }

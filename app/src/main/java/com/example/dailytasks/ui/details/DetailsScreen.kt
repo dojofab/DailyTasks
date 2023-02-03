@@ -111,11 +111,13 @@ fun Content(
             key1 = pagerState.pageCount,
             key2 = pagerState
         ) {
+            //for showing selected item from list screen
             coroutineScope.launch {
                 if (selectedItemIndex >= 0)
                     pagerState.animateScrollToPage(selectedItemIndex)
             }
 
+            //for setting scrolled task
             snapshotFlow { pagerState.currentPage }.collect { page ->
                 if(taskListState.value.isNotEmpty())
                     taskViewModel.selectTask(taskListState.value[page])

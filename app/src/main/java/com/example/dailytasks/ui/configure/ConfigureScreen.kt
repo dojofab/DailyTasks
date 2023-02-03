@@ -118,7 +118,7 @@ fun TopBar(
             taskViewModel.selectedTaskState.value?.let {
 
                 val status = taskName.value.isNotEmpty() && colorSelected.value.isNotEmpty() && length.value > 0
-                val colorDisable: Color = if(status)
+                val tint: Color = if(status)
                     Color.Red
                 else
                     Color.LightGray
@@ -131,7 +131,7 @@ fun TopBar(
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription =  stringResource(id = R.string.delete_icon),
-                        tint = colorDisable,
+                        tint = tint,
                         modifier = Modifier.size(30.dp)
                     )
                 }
@@ -213,13 +213,15 @@ fun StatelessContent(
     Column(
         modifier = modifier
     ){
+
         DataScreen(
             modifier = modifier,
+            isRunning = taskEntity?.isRunning,
             taskName = taskName,
             colorSelected = colorSelected,
             length = length,
             durationPicker = durationPicker,
-            colorPicker = colorPicker
+            colorPicker = colorPicker,
         )
         Spacer(modifier = Modifier.weight(1f))
         ControlsScreen(

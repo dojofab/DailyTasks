@@ -1,6 +1,7 @@
 package com.example.dailytasks.data
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.dailytasks.util.Constant
 
@@ -15,5 +16,15 @@ data class TaskEntity(
 
     val name: String,
     val length: Int,
-    val theme: String
-)
+    val theme: String,
+
+    @Ignore
+    var isRunning: Boolean? = false
+){
+    constructor(
+        id: Long?,
+        name: String,
+        length: Int,
+        theme: String
+    ): this(id = id, name = name, length = length, theme = theme, isRunning = false)
+}
