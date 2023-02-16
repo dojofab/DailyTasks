@@ -7,12 +7,29 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Donn Fabian on 02-01-2023
  */
-class TaskRepository(
-    private val taskDao: TaskDao
-) {
+interface TaskRepositoryAbstract{
+    fun getTasks(): Flow<List<TaskEntity>>
+    suspend fun insert(task: TaskEntity)
+    suspend fun update(task: TaskEntity)
+    suspend fun delete(task: TaskEntity)
+}
 
-    fun getTasks(): Flow<List<TaskEntity>> = taskDao.getTasks()
-    suspend fun insert(task: TaskEntity) = taskDao.insert(task = task)
-    suspend fun update(task: TaskEntity) = taskDao.update(task = task)
-    suspend fun delete(task: TaskEntity) = taskDao.delete(task = task)
+
+class TaskRepository(private val taskDao: TaskDao): TaskRepositoryAbstract{
+
+    override fun getTasks(): Flow<List<TaskEntity>> {
+        return taskDao.getTasks()
+    }
+
+    override suspend fun insert(task: TaskEntity) {
+        taskDao.insert(task = task)
+    }
+
+    override suspend fun update(task: TaskEntity) {
+        taskDao.update(task = task)
+    }
+
+    override suspend fun delete(task: TaskEntity) {
+        taskDao.delete(task = task)
+    }
 }
